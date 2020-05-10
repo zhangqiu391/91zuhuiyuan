@@ -1,1 +1,1 @@
-{"server_url":"http://39.99.144.156/py/","notification_html":"程序版本需要升级，请稍候..."}
+{"server_url":"http://39.99.144.156/py_proxy/","notification_html":"程序版本需要升级，请稍候..."}
