@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>﻿
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script>
+    //获取url中的参数，如果没有这个参数返回""
+    function get_url_param(paraName) {
+      var url = document.location.toString();
+      var arrObj = url.split("?");
+      if (arrObj.length > 1) {
+        var arrPara = arrObj[1].split("&");
+        var arr;
+        for (var i = 0; i < arrPara.length; i++) {
+          arr = arrPara[i].split("=");
+          if (arr != null && arr[0] == paraName) {
+            return arr[1];
+          }
+        }
+        return "";
+      } else {
+        return "";
+      }
+    }
+    code = get_url_param('code');
+    level = get_url_param('level');
+    if (level == 0|| code.length!=8) {
+      document.write('<h1>您的网址输入有误！请检测有没有输入完整的网址！<br/>如果确定是完整的，请您把店家给您的链接中的“http://”改为“https://”，再尝试看能不能打开！</h1>')
+    }
+    else if (level == 2) {
+      document.write('<html><head/><body><p>************************<br/>请在电脑浏览器打开下列链接：</p><p><a href="http://bqwert.gitee.io/91zuhuiyuan/91%E7%A7%9F%E4%BC%9A%E5%91%98_l.rar">91租会员-Choice金融终端合作版</a><br/>下载91租会员，随便注册一个账号，然后导入这个券码即可：<span style=" font-weight:600; color:#ff0000;">' + code + '</span><br/>注意如果有效期显示为15天不用管，正常用即可！！放心是可以长期用的！！！<br/><br/>1.为什么要下载客户端？<br/>客户端是用来开全权限的，而且还可以导入之前Choice账号的自选股等数据，以后还可以在上面续费，所以是需要下载的哈！<br/>（客户端已经过360杀毒专业检测认证，请亲们放心使用！）<br/>*************************<br/><span style=" font-weight:600;">为防止找不到我们，请加Q群<span style="color:#ff0000;">742259837</span>，永久更新购买地址！</span></p></body></html>')
+    }
+  </script>
+  <pingendo onclick="window.open('https://pingendo.com/', '_blank')" style="cursor:pointer;position: fixed;bottom: 20px;right:20px;padding:4px;background-color: #00b0eb;border-radius: 8px; width:220px;display:flex;flex-direction:row;align-items:center;justify-content:center;font-size:14px;color:white">Made with Pingendo Free&nbsp;&nbsp;<img src="https://pingendo.com/site-assets/Pingendo_logo_big.png" class="d-block" alt="Pingendo logo" height="16"></pingendo>
+</body>
+
+</html>

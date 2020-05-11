@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)https://bbb522485449.wixsite.com/_partials/ding-dashboard-statics/1.102.0/asdk/handler.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<style type="text/css" adt="123"></style><script>//console.log('a')
+</script><script>//remove 17173 video ad
+doAdblock();
+function doAdblock(){
+    (function() {
+        function A() {}
+        A.prototype = {
+            rules: {
+                '17173_in':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFile(Customer)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_in_20150522.swf"
+                },
+                '17173_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFileFirstpage\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_out_20150522.swf"
+                },
+                '17173_live':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream(_firstpage)?\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173_stream_20150522.swf"
+                },
+                '17173_live_out':{
+                    'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream_(custom)?Out\.swf/,
+                    'replace':"http://swf.adtchrome.com/17173.out.Live.swf"
+                }
+            },
+            _done: null,
+            get done() {
+                if(!this._done) {
+                    this._done = new Array();
+                }
+                return this._done;
+            },
+            addAnimations: function() {
+                var style = document.createElement('style');
+                style.type = 'text/css';
+                style.innerHTML = 'object,embed{\
+                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;\
+                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;\
+                -o-animation-duration:.001s;-o-animation-name:playerInserted;\
+                animation-duration:.001s;animation-name:playerInserted;}\
+                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}';
+                document.getElementsByTagName('head')[0].appendChild(style);
+            },
+            animationsHandler: function(e) {
+                if(e.animationName === 'playerInserted') {
+                    this.replace(e.target);
+                }
+            },
+            replace: function(elem) {
+                if(this.done.indexOf(elem) != -1) return;
+                this.done.push(elem);
+                var player = elem.data || elem.src;
+                if(!player) return;
+                var i, find, replace = false;
+                for(i in this.rules) {
+                    find = this.rules[i]['find'];
+                    if(find.test(player)) {
+                        replace = this.rules[i]['replace'];
+                        if('function' === typeof this.rules[i]['preHandle']) {
+                            this.rules[i]['preHandle'].bind(this, elem, find, replace, player)();
+                        }else{
+                            this.reallyReplace.bind(this, elem, find, replace)();
+                        }
+                        break;
+                    }
+                }
+            },
+            reallyReplace: function(elem, find, replace) {
+                elem.data && (elem.data = elem.data.replace(find, replace)) || elem.src && ((elem.src = elem.src.replace(find, replace)) && (elem.style.display = 'block'));
+                var b = elem.querySelector("param[name='movie']");
+                this.reloadPlugin(elem);
+            },
+            reloadPlugin: function(elem) {
+                var nextSibling = elem.nextSibling;
+                var parentNode = elem.parentNode;
+                parentNode.removeChild(elem);
+                var newElem = elem.cloneNode(true);
+                this.done.push(newElem);
+                if(nextSibling) {
+                    parentNode.insertBefore(newElem, nextSibling);
+                } else {
+                    parentNode.appendChild(newElem);
+                }
+            },
+            init: function() {
+                var handler = this.animationsHandler.bind(this);
+                document.body.addEventListener('webkitAnimationStart', handler, false);
+                document.body.addEventListener('msAnimationStart', handler, false);
+                document.body.addEventListener('oAnimationStart', handler, false);
+                document.body.addEventListener('animationstart', handler, false);
+                this.addAnimations();
+            }
+        };
+        new A().init();
+    })();
+}
+//remove baidu search ad
+if(document.URL.indexOf('www.baidu.com') >= 0){
+    if(document && document.getElementsByTagName && document.getElementById && document.body){
+        var aa = function(){
+            var all = document.body.querySelectorAll("#content_left div,#content_left table");
+            for(var i = 0; i < all.length; i++){
+                if(/display:\s?(table|block)\s!important/.test(all[i].getAttribute("style"))){all[i].style.display= "none";all[i].style.visibility='hidden';}
+            }
+            all = document.body.querySelectorAll('.result.c-container[id="1"]');
+            //if(all.length == 1) return;
+            for(var i = 0; i < all.length; i++){
+                if(all[i].innerHTML && all[i].innerHTML.indexOf('&#24191;&#21578;')>-1){
+                    all[i].style.display= "none";all[i].style.visibility='hidden';
+                }
+            }
+        }
+        aa();
+        document.getElementById('wrapper_wrapper').addEventListener('DOMSubtreeModified',aa)
+    };
+}
+//remove sohu video ad
+if (document.URL.indexOf("tv.sohu.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+//remove 56.com video ad
+if (document.URL.indexOf("56.com") >= 0){
+    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+}
+//fore iqiyi enable html5 player function
+if (document.URL.indexOf("iqiyi.com") >= 0){
+    if (document.cookie.indexOf("player_forcedType=h5_VOD")==-1){
+        document.cookie='player_forcedType=h5_VOD'
+        if(localStorage.reloadTime && Date.now() - parseInt(localStorage.reloadTime)<60000){
+            console.log('no reload')
+        }else{
+            location.reload()
+            localStorage.reloadTime = Date.now();
+        }
+    }
+}
+</script><style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style></head>
+<body style="background-color: transparent; overflow: hidden;">
+<script>
+
+  function _getViewer() {
+//    if(document.domain.endsWith('wix.com')) document.domain = 'wix.com';
+//    if(document.domain.endsWith("wixsite.com")) document.domain = 'wixsite.com';
+    try {//align domain
+      var parentDomain = window.parent.parent.document.domain; //test
+      window.parent.parent.document.domain = parentDomain; //this needs to be set if the domain was never set (happens on complex domains)
+      window.document.domain = parentDomain;
+    } catch (e) {
+      //failed on parent domain, swich to higher level domain and try again
+      var originalDomain = window.document.domain;
+      var parentDomain;
+      try {
+        parentDomain = originalDomain.replace(originalDomain.split('.')[0] + '.', '');
+        window.document.domain = parentDomain;
+        if (window.document.domain !== window.parent.parent.document.domain) {
+          console.log('asdk - domains do not match. me: ' + window.document.domain + ' parent ' + window.parent.parent.document.domain);
+        }
+      } catch (e) {
+        //failed on parent domain again, we are probably on subdomain, swich to higher level domain and try again
+        var originalDomain = parentDomain;
+        try {
+          parentDomain = originalDomain.replace(originalDomain.split('.')[0] + '.', '');
+          window.document.domain = parentDomain;
+          if (window.document.domain !== window.parent.parent.document.domain) {
+            console.log('asdk - domains do not match. me: ' + window.document.domain + ' parent ' + window.parent.parent.document.domain);
+          }
+        } catch (e) {
+          console.log('asdk - failed to match domain to ' + parentDomain + ' back to ' + originalDomain);
+          window.document.domain = originalDomain;//no go, back to original
+        }
+      }
+    }
+    return window.parent.parent;
+  }
+
+  function _setAttribute(comp, propName, propValue) {
+    if (!comp.getAttribute(propName + "_o")) comp.setAttribute(propName + "_o", comp.getAttribute(propName));
+    comp.setAttribute(propName, propValue);
+  }
+
+  function _restoreAttribute(comp, propName) {
+    if (comp.getAttribute(propName + "_o")) {
+      comp.setAttribute(propName, comp.getAttribute(propName + "_o"));
+      comp.removeAttribute(propName + "_o");
+    }
+  }
+
+  function _setWidgetHeight(viewer, compId, heightNum) {
+    viewer.postMessage('{"intent":"TPA2","callId":0,"type":"heightChanged","compId":"' + compId + '","deviceType":"mobile","data":{"height":' + heightNum + ',"version":"1.67.0"}}',"*");
+  }
+
+
+
+  var setWidgetFullScreenHandler = null;
+  function setWidgetFullScreen(compId, bgColor, isFullScreen) {
+    var viewer = _getViewer();
+    if (isFullScreen) {
+      if (!setWidgetFullScreenHandler) {
+        //add setTimeout to prevent santa patcher to resize the widget on window resize after our fix to the height (bug fix for ios with floating safari controls)
+        setWidgetFullScreenHandler = function() { _setWidgetFullScreen(viewer, compId, bgColor, isFullScreen); };
+      }
+      viewer.addEventListener('resize', setWidgetFullScreenHandler);
+    } else {
+      if (setWidgetFullScreenHandler) {
+        viewer.removeEventListener('resize', setWidgetFullScreenHandler);
+        setWidgetFullScreenHandler = null;
+      }
+    }
+    return _setWidgetFullScreen(viewer, compId, bgColor, isFullScreen);
+  }
+
+  function _setWidgetFullScreen(viewer, compId, bgColor, isFullScreen) {
+
+    var fDoc = viewer.document;
+    var comp = fDoc.getElementById(compId).childNodes[0];
+
+    var width = "320px";
+    var heightNum = fDoc.body.getBoundingClientRect().height;
+    var height = "" + (heightNum) + "px";
+
+    if (comp) {
+      setTimeout(function(){
+        //sometimes on ios setting the height to the exact size of the screen is not working - so first send -1
+        _setWidgetHeight(viewer, compId, (heightNum - 1));
+        _setWidgetHeight(viewer, compId, heightNum);
+      }, 1000);
+      setTimeout(function(){
+        _setWidgetHeight(viewer, compId, (heightNum - 1));
+        _setWidgetHeight(viewer, compId, heightNum);
+      }, 2000);
+      setTimeout(function(){
+        _setWidgetHeight(viewer, compId, heightNum);
+      }, 3000);
+
+      if (isFullScreen) {
+        fDoc.body.classList.add('fullScreenMode', 'fullScreenMode-scrollable');
+        console.log('asdk setHeight of comp Id to', compId, height);
+        _setAttribute(comp, 'style', 'position: fixed; top: 0; left: 0px; width: 100%;height:100%;z-index: 1004; background-color: ' + bgColor + ';'); //z-index 1004 to be bellow the lightbox (1005)
+        _setAttribute(comp, 'width', width);
+        _setAttribute(comp, 'height', height);
+        _setAttribute(comp.parentNode, 'style', 'position: fixed; top: 0; left: undefined; width: ' + width + ';height: ' + height + ';z-index: 1004; background-color: ' + bgColor + ';');
+      } else {
+        fDoc.body.classList.remove('fullScreenMode', 'fullScreenMode-scrollable');
+        _restoreAttribute(comp, 'style');
+        _restoreAttribute(comp, 'width');
+        _restoreAttribute(comp, 'height');
+        _restoreAttribute(comp.parentNode, 'style');
+      }
+    } else {
+      console.error("Component " + compId + "Not found");
+    }
+  }
+
+  var setWidgetFixedOnBottomHandler = null;
+  function setWidgetFixedOnBottom(compId, isEnabled, height) {
+    var viewer = _getViewer();
+    if (isEnabled) {
+      //add setTimeout to prevent santa patcher to resize the widget on window resize after our fix to the height (bug fix for ios with floating safari controls)
+      if (setWidgetFixedOnBottomHandler) {
+        viewer.removeEventListener('resize', setWidgetFixedOnBottomHandler);
+      }
+      setWidgetFixedOnBottomHandler = function() { _setWidgetFixedOnBottom(viewer, compId, isEnabled, height); };
+      viewer.addEventListener('resize', setWidgetFixedOnBottomHandler);
+    } else {
+      if (setWidgetFixedOnBottomHandler) {
+        viewer.removeEventListener('resize', setWidgetFixedOnBottomHandler);
+        setWidgetFixedOnBottomHandler = null;
+      }
+    }
+    return _setWidgetFixedOnBottom(viewer, compId, isEnabled, height);
+  }
+
+  function _createClassIfNeeded(fDoc, styleId, styleItem) {
+    if (!fDoc.getElementById(styleId)) {
+      var style = fDoc.createElement('style');
+      style.type = 'text/css';
+      style.id = styleId;
+      style.innerHTML = styleItem;
+      fDoc.head.appendChild(style);
+      //console.log('style added ' + i + ' on ' + fDoc.location.origin + fDoc.location.pathname)
+    } else {
+      //console.log('style exists ' + i + ' on ' + fDoc.location.origin + fDoc.location.pathname)
+    }
+  }
+
+  function _setWidgetFixedOnBottom(viewer, compId, isEnabled, heightNum) {
+
+    var fDoc = viewer.document;
+    var comp = fDoc.getElementById(compId).childNodes[0];
+    var widthNum = fDoc.body.getBoundingClientRect().width;
+    var width = "" + (widthNum) + "px";
+    var height = "" + (heightNum) + "px";
+
+    if (comp) {
+      if (isEnabled) {
+        _createClassIfNeeded(fDoc, 'widget-on-bottom', '.topAuto { top: auto !important; }');
+        console.log('asdk _setWidgetFixedOnBottom of comp Id to', compId, height);
+        _setAttribute(comp, 'style', 'position: fixed; bottom: 0; left: 0; right: 0; width: 100%;height:' + height + ';z-index: 1004; transform: translateZ(0);');
+        _setAttribute(comp, 'width', width);
+        _setAttribute(comp, 'height', height);
+        _setAttribute(comp.parentNode, 'style', 'position: fixed; bottom: 0; left: 0; right: 0; width: ' + width + ';height: ' + height + ';z-index: 1004;');
+        comp.parentNode.classList.add('topAuto');
+      } else {
+        _restoreAttribute(comp, 'style');
+        _restoreAttribute(comp, 'width');
+        _restoreAttribute(comp, 'height');
+        _restoreAttribute(comp.parentNode, 'style');
+        comp.parentNode.classList.remove('topAuto');
+      }
+    } else {
+      console.error("Component " + compId + "Not found");
+    }
+  }
+
+  ///this should be removed - too generic
+  function setWidgetCss(compId, setChildCss, css) {
+      try {
+		  var document = _getViewer().document;
+          var fDoc = setChildCss ?  document.childNodes[0] : document;
+          var comp = fDoc.getElementById(compId);
+
+          for (var attr in css) {
+              if (css.hasOwnProperty(attr)) {
+                  comp.style[attr] = css[attr];
+              }
+          }
+      } catch (e) {
+         console.error('Could not set Css for Widget', compId, css)
+      }
+  }
+
+  // Null content = revert to last value
+  function setViewportContent(content) {
+	  var document = _getViewer().document;
+	  var meta = document.getElementById('wixMobileViewport');
+
+	  // We'll save a stack of all the past values, so system can pass
+	  // null in a sequence and go back the tree
+	  var oldValueStackJson = meta.getAttribute('__prev_content') || "[]";
+	  var oldValueStack = JSON.parse(oldValueStackJson);
+
+	  if (content === null) {
+		  if (oldValueStack.length === 0) return;
+		  content = oldValueStack.pop();
+	  } else {
+		  var prev = meta.getAttribute('content');
+		  oldValueStack.push(prev);
+	  }
+
+	  meta.setAttribute('content', content);
+	  meta.setAttribute('__prev_content', JSON.stringify(oldValueStack));
+  }
+
+  window.onmessage = function (e) {
+      if(e.data) {
+        try{
+          var msg = JSON.parse(e.data);
+          console.log('on message: ', msg);
+          if(msg.method === 'setWidgetFullScreen') {
+            setWidgetFullScreen(msg.compId, msg.bgColor, msg.isFullScreen);
+          } else if(msg.method === 'setWidgetFixedOnBottom') {
+            setWidgetFixedOnBottom(msg.compId, msg.isEnabled, msg.height);
+          } else if(msg.method === 'setWidgetCss') {
+            setWidgetCss(msg.compId, msg.setChildCss, msg.css);
+          } else if(msg.method === 'setViewportContent') {
+            setViewportContent(msg.content);
+          } else {
+            console.log('Unsupported method', msg);
+          }
+
+        }catch(err) {
+//           console.error('Failed to execute ', err, e);
+        }
+      }
+  };
+
+</script>
+
+
+
+
+</body></html>

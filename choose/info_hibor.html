@@ -1,0 +1,43 @@
+﻿
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+  <script >
+    //获取url中的参数，如果没有这个参数返回""
+    function get_url_param(paraName) {
+      var url = document.location.toString();
+      var arrObj = url.split("?");
+      if (arrObj.length > 1) {
+        var arrPara = arrObj[1].split("&");
+        var arr;
+        for (var i = 0; i < arrPara.length; i++) {
+          arr = arrPara[i].split("=");
+          if (arr != null && arr[0] == paraName) {
+            return arr[1];
+          }
+        }
+        return "";
+      } else {
+        return "";
+      }
+    }
+    code = get_url_param('code');
+    level = get_url_param('level');
+    if (code=='pqsa0597'||code=='aqhe1477'||code=='nuhb2436'){
+    document.write('<html><head/><body><p>************************<br/>您的慧博账号密码均为：</p><p><span style=" font-weight:600; color:#ff0000;">18083746784</span></h2><br/>请直接打开慧博登陆即可！谢谢您的购买，欢迎您下次光临！<br/>***********************</span></p></body></html>')
+    
+  	}
+    else if (level == 0 || code.length!=8) {
+      document.write('<h1>您的网址输入有误！请检测有没有输入完整的网址！<br/>如果确定是完整的，请您把店家给您的链接中的“http://”改为“https://”，再尝试看能不能打开！</h1>')
+    }
+    else if (level == 1) {
+    document.write('<html><head/><body><p>************************<br/>请在电脑浏览器打开下列链接：</p><p><a href="http://39.99.144.156/static/91zuhuiyuan/91租会员_l.zip">91租会员-慧博智能终端合作版.zip</a><br/>下载91租会员-慧博智能终端合作版，安装后随便注册一个账号，然后导入这个<h2><span style=" font-weight:600; color:#ff0000;">券码：' + code + '</span></h2><br/>（客户端已经过360杀毒专业检测认证，请亲们放心使用！）<br/>*************************<br/><span style=" font-weight:600;">为防止找不到我们，请加Q群(新群)<span style="color:#ff0000;">1081303398</span>，永久更新购买地址！</span></p></body></html>')
+    }
+  </script>
+</body>
+
+</html>
